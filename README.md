@@ -1,28 +1,76 @@
-# Analisis Ulasan Aplikasi Moovit Menggunakan Natural Language Processing (NLP)
+# Analisis Sentimen Ulasan Aplikasi Moovit
 
-Repositori ini berisi dokumentasi dan implementasi dari proyek analisis ulasan pengguna aplikasi Moovit. Proyek ini merupakan bagian dari tugas mata kuliah **Pemodelan Bahasa Alami (PBA)** dan mencakup keseluruhan *pipeline* NLP, mulai dari pengumpulan data hingga analisis dan ekstraksi wawasan.
+## 📜 Deskripsi Proyek
 
-**Author**: [Qoyyimil](https://github.com/qoyyimil)
+Repositori ini mendokumentasikan implementasi *pipeline* Natural Language Processing (NLP) untuk menganalisis sentimen dari ulasan pengguna aplikasi **Moovit** di Google Play Store. Proyek ini bertujuan mengolah data tekstual tidak terstruktur menjadi wawasan yang dapat ditindaklanjuti mengenai persepsi pengguna.
 
----
+Proyek ini adalah bagian dari tugas mata kuliah **Pemodelan Bahasa Alami (PBA)**.
 
-### **Deskripsi Proyek**
-
-Tujuan utama dari proyek ini adalah untuk mengolah data tekstual tidak terstruktur dari ulasan pengguna menjadi wawasan yang dapat ditindaklanjuti. Proses ini melibatkan tiga tahap utama yang diuraikan di bawah ini, masing-masing terdapat dalam *notebook* Jupyter yang terpisah.
+**Author**: [Qoyyimil](https://github.com/qoyyimil) | 5026221115
 
 ---
 
-### **Pipeline Proyek: Tahapan & Hasil**
+## 📁 Struktur Proyek
 
-| Tahap | Notebook | Deskripsi Utama | Output Utama |
-| :---: | :--- | :--- | :--- |
-| **1** | `1_Scraping_Moovit_Reviews.ipynb` | Mengambil data mentah dari Google Play Store. | `moovit_reviews_raw.csv` |
-| **2** | `2_Preprocessing_Moovit_Reviews.ipynb`| Membersihkan dan menormalisasi teks ulasan. | `moovit_reviews_cleaned.csv` |
-| **3** | `3_EDA_BoW_Regex_Analysis_Moovit.ipynb`| Melakukan EDA, BoW, dan analisis sentimen. | Wawasan & Visualisasi |
+```
+.
+├── data/
+│   ├── moovit_reviews_cleaned.csv
+│   └── moovit_reviews_raw.csv
+├── notebooks/
+│   ├── 1_Scraping_Moovit_Reviews.ipynb
+│   ├── 2_Preprocessing_Moovit_Reviews.ipynb
+│   ├── 3_EDA_BoW_Regex_Analysis_Moovit.ipynb
+│   └── 4_TFIDF_Moovit_Sentiment_Analysis.ipynb
+└── README.md
+```
 
 ---
 
-### 🚀 Tech Stack
+## 📍 Alur Kerja Proyek: Tahapan & Hasil
+
+Berikut adalah rincian tahapan yang dilakukan dalam setiap *notebook*:
+
+#### 1. `1_Scraping_Moovit_Reviews.ipynb` 📥
+   - Mengambil data ulasan dari Google Play Store (`google-play-scraper`).
+   - Melakukan verifikasi bahasa awal (`langdetect`).
+   - Menyimpan data mentah ke `moovit_reviews_raw.csv`.
+
+#### 2. `2_Preprocessing_Moovit_Reviews.ipynb` 🧹
+   - Memuat data mentah.
+   - Melakukan pembersihan teks (hapus URL, emoji, tanda baca, angka).
+   - Menormalisasi kata menggunakan kamus *custom* (slang, typo, singkatan Bahasa Indonesia).
+   - Melakukan Tokenisasi (`nltk`).
+   - Melakukan Stopword Removal (NLTK + Sastrawi + *custom list*).
+   - Melakukan Stemming (`Sastrawi`).
+   - Menghapus kata-kata langka (*rare words*) dan memperbarui *stopwords* secara iteratif.
+   - Menyimpan data bersih ke `moovit_reviews_cleaned.csv`.
+
+#### 3. `3_EDA_BoW_Regex_Analysis_Moovit.ipynb` 📊
+   - Memuat data bersih.
+   - Melakukan Exploratory Data Analysis (EDA):
+     - Distribusi Skor (Rating).
+     - Jumlah Ulasan per Tahun.
+     - Analisis Panjang Ulasan vs. Skor.
+     - Visualisasi Word Cloud.
+   - Mengimplementasikan Bag of Words (BoW) (`scikit-learn`).
+   - Melakukan analisis sentimen sederhana berbasis Regex (kata kunci positif/negatif).
+
+#### 4. `4_TFIDF_Moovit_Sentiment_Analysis.ipynb` 🤖
+   - Memuat data bersih.
+   - Membuat label sentimen biner (Positif/Negatif) dari skor.
+   - Membagi data menjadi set Latih dan Uji (`train_test_split`).
+   - Mengimplementasikan TF-IDF (`scikit-learn`) dengan optimasi parameter (`min_df`, `max_df`, `ngram_range`).
+   - Melatih dan mengevaluasi beberapa model klasifikasi:
+     - Logistic Regression
+     - Multinomial Naive Bayes
+     - Linear SVC
+   - Membandingkan performa model.
+   - Menjalankan implementasi TF-IDF manual yang disesuaikan.
+
+---
+
+## 🚀 Tech Stack
 
 <p align="left">
   <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
@@ -35,7 +83,7 @@ Tujuan utama dari proyek ini adalah untuk mengolah data tekstual tidak terstrukt
 
 ---
 
-### **Panduan Eksekusi**
+## ▶️ Panduan Eksekusi
 
 Untuk mereplikasi hasil dari analisis ini, ikuti langkah-langkah berikut:
 
@@ -47,10 +95,13 @@ Untuk mereplikasi hasil dari analisis ini, ikuti langkah-langkah berikut:
 2.  **Instalasi Dependensi**:
     Pastikan semua *library* yang tercantum di atas sudah terinstal di lingkungan Python Anda.
     ```bash
-    pip install pandas google-play-scraper sastrawi nltk scikit-learn seaborn matplotlib wordcloud emoji
+    pip install pandas google-play-scraper sastrawi nltk scikit-learn seaborn matplotlib wordcloud emoji langdetect
     ```
 3.  **Eksekusi Notebook**:
-    Jalankan *notebook* secara berurutan untuk memastikan alur data yang benar:
-    -   `1_Scraping_Moovit_Reviews.ipynb`
-    -   `2_Preprocessing_Moovit_Reviews.ipynb`
-    -   `3_EDA_BoW_Regex_Analysis_Moovit.ipynb`
+    Jalankan *notebook* di dalam folder `notebooks/` secara berurutan untuk memastikan alur data yang benar:
+    - `1_Scraping_Moovit_Reviews.ipynb`
+    - `2_Preprocessing_Moovit_Reviews.ipynb`
+    - `3_EDA_BoW_Regex_Analysis_Moovit.ipynb`
+    - `4_TFIDF_Moovit_Sentiment_Analysis.ipynb`
+
+---
